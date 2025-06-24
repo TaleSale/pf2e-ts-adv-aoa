@@ -1,0 +1,161 @@
+<form class="editable" autocomplete="off" spellcheck="false">
+    <nav class="sub-nav">
+        <a data-tab="overview" class="active">Обзор</a>
+        <a data-tab="construction">Строительство</a>
+    </nav>
+
+    <section class="container">
+        <!-- ВКЛАДКА "ОБЗОР" -->
+        <div class="tab overview-tab active" data-tab="overview">
+            <div class="content" style="padding: 5px; overflow-y: auto; height: 100%;">
+                {{#each members as |member|}}
+                <section class="member" data-actor-uuid="{{member.uuid}}">
+                    <div class="portrait">
+                        <a data-action="open-sheet"><img src="{{member.img}}"></a>
+                    </div>
+                    <div class="data">
+                        <header>
+                            <div class="name">
+                                <a data-action="open-sheet">{{member.name}}</a>
+                            </div>
+                            <div class="resource fortress-points" title="Очки Крепости (ЛКМ: +1, ПКМ: -1)">
+                                <span class="point {{#if (gte member.fortressPoints 1)}}filled{{/if}}">{{#if (gte member.fortressPoints 1)}}A{{/if}}</span>
+                                <span class="point {{#if (gte member.fortressPoints 2)}}filled{{/if}}">{{#if (gte member.fortressPoints 2)}}A{{/if}}</span>
+                                <span class="point {{#if (gte member.fortressPoints 3)}}filled{{/if}}">{{#if (gte member.fortressPoints 3)}}A{{/if}}</span>
+                            </div>
+                        </header>
+                        <div class="main-stats simplified"></div>
+                        <div class="room-skills">
+                            {{#each member.roomSkills as |roomSkill|}}
+                                <div class="skill-button-wrapper">
+                                    <button type="button" class="tag-light rollable" 
+                                        data-action="roll-room-skill" 
+                                        data-skill-id="{{roomSkill.skill}}" 
+                                        data-bonus="{{roomSkill.bonus}}"
+                                        data-room-name="{{roomSkill.name}}">
+                                        {{roomSkill.name}}
+                                    </button>
+                                    <small class="skill-button-hint">({{roomSkill.skillLabel}} +{{roomSkill.bonus}})</small>
+                                </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                </section>
+                {{/each}}
+            </div>
+        </div>
+
+        <!-- ВКЛАДКА "СТРОИТЕЛЬСТВО" -->
+        <div class="tab construction-tab" data-tab="construction">
+            <div class="construction-wrapper">
+                <!-- Левая колонка для ГМ -->
+                <div class="gm-section">
+                    {{#if isGM}}
+                        <h3>Выдача Очков Строительства</h3>
+                        <p class="notes">Отметьте книги, которые завершила группа. Каждая отметка дает +4 Очка Строительства.</p>
+                        <div class="book-list">
+                            <label><input type="checkbox" class="book-checkbox" data-book-id="hillKnights" {{#if citadel.books.hillKnights}}checked{{/if}}> Холм Адских Рыцарей</label>
+                            <label><input type="checkbox" class="book-checkbox" data-book-id="cultCinders" {{#if citadel.books.cultCinders}}checked{{/if}}> Культ Пепла</label>
+                            <label><input type="checkbox" class="book-checkbox" data-book-id="tomorrowBurns" {{#if citadel.books.tomorrowBurns}}checked{{/if}}> Завтра должно сгореть</label>
+                            <label><input type="checkbox" class="book-checkbox" data-book-id="ghostCity" {{#if citadel.books.ghostCity}}checked{{/if}}> Огни города-призрака</label>
+                            <label><input type="checkbox" class="book-checkbox" data-book-id="scarletTriad" {{#if citadel.books.scarletTriad}}checked{{/if}}> Алая Триада</label>
+                        </div>
+                        <button type="button" class="reset-button" data-action="reset-all-spent"><i class="fas fa-undo"></i> Сбросить все очки</button>
+                    {{/if}}
+                </div>
+                <!-- Правая колонка для игроков -->
+                <div class="player-section">
+                    <h2 class="points-header">Очков Строительства: {{citadel.unspent}} / {{citadel.totalEarned}}</h2>
+                    <div class="construction-columns two-cols">
+                        <div class="column">
+                            <header>
+                                <h3>Расчистка: {{citadel.spent.clearance}}</h3>
+                                <div class="buttons">
+                                    <button type="button" data-action="unspend-point" data-category="clearance" {{#unless citadel.spent.clearance}}disabled{{/unless}}>−</button>
+                                    <button type="button" data-action="spend-point" data-category="clearance" {{#unless citadel.unspent}}disabled{{/unless}}>+</button>
+                                </div>
+                            </header>
+                            <div class="column-content">
+                                {{#if citadel.spent.clearance}}<p><strong>Доступно комнат:</strong> {{citadel.availableRooms}}</p>{{else}}<p class="notes">Потратьте очки, чтобы получить доступ к комнатам.</p>{{/if}}
+                            </div>
+                        </div>
+                        <div class="column">
+                            <header>
+                                <h3>Оборона: {{citadel.spent.defense}}</h3>
+                                <div class="buttons">
+                                    <button type="button" data-action="unspend-point" data-category="defense" {{#unless citadel.spent.defense}}disabled{{/unless}}>−</button>
+                                    <button type="button" data-action="spend-point" data-category="defense" {{#unless citadel.unspent}}disabled{{/unless}}>+</button>
+                                </div>
+                            </header>
+                            <div class="column-content">
+                                {{#if citadel.spent.defense}}<p><strong>Очков Обороны:</strong> {{citadel.defensePoints}}</p>{{else}}<p class="notes">Потратьте очки, чтобы укрепить цитадель.</p>{{/if}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rooms-section">
+                        <hr>
+                        <h3>Комнаты ({{citadel.builtRoomsCount}} / {{citadel.availableRooms}})</h3>
+                        <div class="room-list">
+                            {{#each citadel.rooms as |room|}}
+                            <div class="room-card" data-room-id="{{room.id}}">
+                                <a class="icon" data-action="edit-room-icon" title="Изменить иконку"><img src="{{room.icon}}"></a>
+                                <div class="details">
+                                    <input type="text" name="room-name-{{room.id}}" value="{{room.name}}" data-field="name" placeholder="Название комнаты">
+                                    <select name="room-skill-{{room.id}}" data-field="skill">
+                                        {{#each ../skillList as |skill|}}<option value="{{skill.id}}" {{#if (eq skill.id room.skill)}}selected{{/if}}>{{skill.label}}</option>{{/each}}
+                                    </select>
+                                </div>
+                                <div class="bonus">
+                                    <span>Бонус: <strong>+{{room.bonus}}</strong></span>
+                                    <button type="button" data-action="upgrade-room" {{#if (or (gte room.bonus 4) (not ../citadel.unspent))}}disabled{{/if}}>+</button>
+                                </div>
+                                <a class="delete-button" data-action="delete-room" title="Удалить комнату"><i class="fas fa-trash"></i></a>
+                            </div>
+                            {{/each}}
+                        </div>
+                        <button type="button" class="add-room-button" data-action="add-new-room" {{#if (or (not citadel.unspent) (gte citadel.builtRoomsCount citadel.availableRooms))}}disabled{{/if}}><i class="fas fa-plus"></i> Построить новую комнату</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+
+<style>
+    /* Стили для Обзора */
+    .sheet.actor.party .fortress-points { display: flex; gap: 4px; align-items: center; cursor: pointer; }
+    .sheet.actor.party .fortress-points .point { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border: 1px solid #888; border-radius: 50%; background-color: transparent; transition: all 0.2s ease-in-out; color: transparent; font-family: 'Signika', sans-serif; font-weight: bold; font-size: 11px; line-height: 1; }
+    .sheet.actor.party .fortress-points .point.filled { background-color: #191813; color: #d92525; border-color: #555; }
+    .sheet.actor.party .main-stats.simplified { min-height: 10px; }
+    .room-skills { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 8px; }
+    .skill-button-wrapper { display: flex; flex-direction: column; align-items: flex-start; }
+    .skill-button-wrapper .tag-light { margin-bottom: 2px; }
+    .skill-button-hint { font-size: 11px; color: #666; padding-left: 5px; }
+    /* Стили для Строительства */
+    .construction-tab { padding: 10px; height: 100%; display: flex; flex-direction: column; }
+    .construction-wrapper { display: flex; gap: 10px; height: 100%; }
+    .gm-section { flex: 1; min-width: 200px; background: rgba(0,0,0,0.05); padding: 8px; border-radius: 5px; }
+    .player-section { flex: 2; display: flex; flex-direction: column; overflow: hidden; } /* ИЗМЕНЕНИЕ */
+    .gm-section h3 { margin-top: 0; }
+    .book-list { display: flex; flex-direction: column; gap: 5px; }
+    .reset-button { margin-top: 10px; width: 100%; }
+    .points-header { text-align: center; font-size: var(--font-size-24); color: var(--color-text-dark-primary); border-bottom: 1px solid var(--color-border-light-tertiary); padding-bottom: 5px; margin-bottom: 10px; }
+    .construction-columns.two-cols { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .column { border: 1px solid var(--color-border-light-tertiary); border-radius: 5px; padding: 8px; display: flex; flex-direction: column; }
+    .column header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--color-border-light-tertiary); padding-bottom: 5px; }
+    .column header h3 { margin: 0; }
+    .column header .buttons { display: flex; gap: 4px; }
+    .column header .buttons button { flex-shrink: 0; width: 24px; height: 24px; line-height: 1; padding: 0; }
+    .column-content { padding-top: 8px; flex-grow: 1; }
+    .column-content .notes { font-size: 12px; color: #666; opacity: 0.8; }
+    .rooms-section { margin-top: 15px; flex-grow: 1; display: flex; flex-direction: column; min-height: 0; } /* ИЗМЕНЕНИЕ */
+    .room-list { flex-grow: 1; overflow-y: auto; padding-right: 5px; }
+    .room-card { display: flex; align-items: center; gap: 10px; border: 1px solid var(--color-border-light-tertiary); padding: 8px; border-radius: 5px; margin-bottom: 5px; position: relative; }
+    .room-card .icon { flex: 0 0 48px; height: 48px; border: 1px solid #ccc; cursor: pointer; }
+    .room-card .icon img { width: 100%; height: 100%; object-fit: cover; }
+    .room-card .details { flex-grow: 1; display: flex; flex-direction: column; gap: 5px; }
+    .room-card .bonus { display: flex; align-items: center; gap: 5px; }
+    .room-card .bonus button { width: 24px; height: 24px; }
+    .add-room-button { width: 100%; margin-top: 10px; flex-shrink: 0; }
+    .delete-button { position: absolute; top: -5px; right: -5px; width: 20px; height: 20px; background: rgba(0,0,0,0.6); color: white; border-radius: 50%; border: 1px solid white; display: flex; align-items: center; justify-content: center; font-size: 10px; cursor: pointer; }
+</style>

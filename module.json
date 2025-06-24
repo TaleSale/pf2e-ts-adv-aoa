@@ -19,6 +19,16 @@
     "verified": "13",
     "maximum": "13"
   },
+  "scripts": [
+    "15.js"
+  ],
+    "languages": [
+        {
+            "lang": "ru",
+            "name": "Русский",
+            "path": "lang/ru.json"
+        }
+    ],
   "authors": [
     {
       "name": "TaleSale",
