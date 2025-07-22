@@ -1,0 +1,42 @@
+{
+  "id": "pf2e-ts-adv-aoa",
+  "title": "PF2E-TS-ADV (Эпоха Пепла)",
+  "description": "Дополнение для АП Эпоха Пепла",
+  "version": "1.2.0",
+  "relationships": {
+    "systems": [
+      {
+        "id": "pf2e",
+        "type": "system",
+        "compatibility": {
+          "minimum": "7.1.0"
+        }
+      }
+    ]
+  },
+  "compatibility": {
+    "minimum": "12",
+    "verified": "13",
+    "maximum": "13"
+  },
+  "scripts": [
+    "15.js"
+  ],
+    "languages": [
+        {
+            "lang": "ru",
+            "name": "Русский",
+            "path": "lang/ru.json"
+        }
+    ],
+  "authors": [
+    {
+      "name": "TaleSale",
+      "url": "https://discord.gg/jYvjzn5",
+      "flags": {}
+    }
+  ],
+  "url": "https://github.com/TaleSale/pf2e-ts-adv-aoa",
+  "manifest": "https://raw.githubusercontent.com/TaleSale/pf2e-ts-adv-aoa/main/module.json",
+  "download": "https://github.com/TaleSale/pf2e-ts-adv-aoa/archive/refs/heads/main.zip"
+}
