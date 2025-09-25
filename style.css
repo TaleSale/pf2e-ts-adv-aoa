@@ -1,0 +1,249 @@
+/* Файл: modules/pf2e-ts-adv-aoa/style.css */
+
+.mwangi-hexploration-dialog .dialog-content { 
+    padding: 10px; 
+}
+.mwangi-hexploration-dialog .section-title { 
+    font-family: "Modesto Condensed", "Palatino Linotype", serif; 
+    font-size: 1.5em; 
+    color: #562818; 
+    border-bottom: 2px solid #562818; 
+    padding-bottom: 5px; 
+    margin-bottom: 15px; 
+}
+.mwangi-hexploration-dialog .gm-section { 
+    margin-bottom: 20px; 
+    padding: 10px; 
+    background-color: #fdf9f2; 
+    border: 1px solid #e0e0d0; 
+    border-radius: 5px; 
+}
+.mwangi-hexploration-dialog .gm-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+.mwangi-hexploration-dialog .gm-header .section-title {
+    margin-bottom: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+    font-size: 1.4em;
+}
+.mwangi-hexploration-dialog .gm-header button {
+    flex-shrink: 0;
+    padding: 4px 8px;
+    font-size: 0.9em;
+    line-height: 1.5;
+    max-height: 30px;
+}
+.mwangi-hexploration-dialog .gm-top-controls { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-start; 
+    gap: 15px; 
+    margin-bottom: 10px; 
+}
+.mwangi-hexploration-dialog .gm-dc-column { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 8px; 
+    flex-basis: 220px; 
+    flex-shrink: 0; 
+}
+.mwangi-hexploration-dialog .gm-dc-column label { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    font-weight: bold; 
+    font-size: 0.95em; 
+    width: 100%; 
+}
+.mwangi-hexploration-dialog .gm-dc-column input[type="number"] { 
+    width: 50px; 
+    padding: 5px; 
+    border: 1px solid #ccc; 
+    border-radius: 3px; 
+    text-align: center; 
+}
+.mwangi-hexploration-dialog .gm-slots-area { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 10px; 
+    flex-grow: 1; 
+}
+.mwangi-hexploration-dialog .gm-slots-row { 
+    display: flex; 
+    gap: 10px; 
+    align-items: flex-start; 
+    justify-content: space-around;
+}
+.mwangi-hexploration-dialog .item-slot-wrapper { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    min-width: 80px; 
+}
+.mwangi-hexploration-dialog .slot-label { 
+    font-weight: bold; 
+    margin-bottom: 5px; 
+    font-size: 0.9em; 
+    color: #444; 
+    text-align: center; 
+}
+.mwangi-hexploration-dialog .item-drop-slot { 
+    width: 64px; 
+    height: 64px; 
+    border: 2px dashed #b0a080; 
+    background-color: #fff; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    border-radius: 4px; 
+    background-size: contain; 
+    background-repeat: no-repeat; 
+    background-position: center; 
+    transition: border-color 0.3s ease, background-color 0.3s ease; 
+    cursor: pointer; 
+    position: relative; 
+}
+.mwangi-hexploration-dialog .item-drop-slot:hover { 
+    border-color: #562818; 
+}
+.mwangi-hexploration-dialog .item-drop-slot.loaded { 
+    border-style: solid; 
+    border-color: #66bb6a; 
+}
+.mwangi-hexploration-dialog .item-drop-slot i { 
+    font-size: 24px; 
+    color: #ccc; 
+}
+.mwangi-hexploration-dialog .item-drop-slot.loaded i { 
+    display: none; 
+}
+.mwangi-hexploration-dialog .slot-name-display { 
+    font-size: 0.8em; 
+    color: #555; 
+    margin-top: 3px; 
+    text-align: center; 
+    word-break: break-word; 
+    max-width: 70px; 
+    line-height: 1.2; 
+}
+.mwangi-hexploration-dialog .affliction-details-row { 
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 8px 20px; 
+    margin-top: 8px; 
+    align-items: center; 
+}
+.mwangi-hexploration-dialog .affliction-save-selector strong { 
+    margin-right: 10px; 
+}
+.mwangi-hexploration-dialog .affliction-save-selector label { 
+    display: inline-block; 
+    margin-right: 15px; 
+    font-size: 0.9em; 
+}
+.mwangi-hexploration-dialog .affliction-traits-display { 
+    font-size: 0.9em; 
+    color: #333; 
+}
+.mwangi-hexploration-dialog .affliction-traits-display strong { 
+    margin-right: 5px; 
+}
+.mwangi-hexploration-dialog .affliction-traits-display span.trait-tag { 
+    display: inline-block; 
+    margin: 1px; 
+    padding: 2px 6px; 
+    background-color: #e0e0e0; 
+    border-radius: 10px; 
+    font-size: 0.8em; 
+    border: 1px solid #ccc; 
+}
+.mwangi-hexploration-dialog .player-row-container { 
+    padding: 12px 0; 
+    border-bottom: 1px solid #e0e0e0; 
+}
+.mwangi-hexploration-dialog .player-row-container:last-child { 
+    border-bottom: none; 
+}
+.mwangi-hexploration-dialog .player-main-info { 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    margin-bottom: 8px; 
+}
+.mwangi-hexploration-dialog .player-main-info .character-portrait { 
+    width: 48px; 
+    height: 48px; 
+    border-radius: 4px; 
+    object-fit: cover; 
+    border: 1px solid #b0a080; 
+    background-color: #fff; 
+}
+.mwangi-hexploration-dialog .player-main-info .player-details { 
+    flex-grow: 1; 
+    display: flex; 
+    flex-direction: column; 
+}
+.mwangi-hexploration-dialog .player-main-info .character-name { 
+    font-weight: bold; 
+    font-size: 1.1em; 
+}
+.mwangi-hexploration-dialog .player-main-info .activity-skill-wrapper { 
+    display: flex; 
+    align-items: center; 
+    flex-wrap: nowrap; 
+    gap: 8px; 
+    margin-top: 4px; 
+    width: 100%; 
+}
+.mwangi-hexploration-dialog .player-main-info select { 
+    flex-shrink: 0; 
+    min-width: 150px; 
+    padding: 6px; 
+    border-radius: 3px; 
+    border: 1px solid #ccc; 
+    font-size: 0.9em; 
+}
+.mwangi-hexploration-dialog .player-main-info .skill-display { 
+    font-style: italic; 
+    color: #666; 
+    flex-shrink: 0; 
+    min-width: 80px; 
+    font-size: 0.9em; 
+}
+.mwangi-hexploration-dialog .skill-bonus-display { 
+    font-size: 0.9em; 
+    color: #3a5e7c; 
+    margin-left: 3px; 
+    flex-shrink: 0; 
+}
+.mwangi-hexploration-dialog .player-main-info .confirm-button-wrapper { 
+    flex-shrink: 0; 
+    margin-left: auto; 
+}
+.mwangi-hexploration-dialog .player-main-info .confirm-button-wrapper button {
+    min-width: 100px; 
+    text-align: center; 
+    padding: 6px 10px; 
+}
+.mwangi-hexploration-dialog .activity-help { 
+    font-size: 0.85em; 
+    color: #333; 
+    padding: 8px; 
+    margin-top: 5px; 
+    background-color: #f4f4f0; 
+    border: 1px solid #e0e0d0; 
+    border-radius: 4px; 
+    margin-left: 58px; /* 48px portrait + 10px gap */
+}
+.mwangi-hexploration-dialog .activity-help strong { 
+    color: #562818; 
+}
+.mwangi-hexploration-dialog .dialog-buttons { 
+    margin-top: 25px; 
+    padding-top: 15px; 
+    border-top: 1px solid #b0a080; 
+}

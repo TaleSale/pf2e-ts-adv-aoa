@@ -1,0 +1,39 @@
+<form autocomplete="off">
+    <div class="form-group">
+        <p class="notes">Здесь вы можете настроить, какие навыки и знания доступны для каждой активности исследования. Изменения будут сохранены для всех и вступят в силу при следующем открытии окна исследования.</p>
+        <p class="notes"><b>Важно:</b> Используйте системные имена навыков (например, `survival`, `stealth`, `jungle-lore`, `warfare-lore`).</p>
+    </div>
+
+    <hr>
+
+    {{#each activities as |activity|}}
+    <div class="form-group">
+        <h3>{{activity.label}}</h3>
+        <div class="skill-list">
+            {{#each activity.skills as |skill|}}
+            <div class="skill-tag">
+                <span>{{skill}}</span>
+                <a class="delete-skill" data-activity-key="{{activity.key}}" data-skill="{{skill}}"><i class="fas fa-times"></i></a>
+            </div>
+            {{/each}}
+            {{#unless activity.skills}}
+            <p class="notes">Для этой активности не задано ни одного навыка.</p>
+            {{/unless}}
+        </div>
+        <div class="add-skill-controls">
+            <input type="text" name="add-{{activity.key}}" placeholder="Например, survival или labor-lore">
+            <button type="button" class="add-skill" data-activity-key="{{activity.key}}"><i class="fas fa-plus"></i> Добавить навык</button>
+        </div>
+    </div>
+    <hr>
+    {{/each}}
+
+    <footer class="sheet-footer flexrow">
+        <button type="submit" name="submit">
+            <i class="far fa-save"></i> Сохранить и закрыть
+        </button>
+        <button type="button" name="reset" class="reset-defaults">
+            <i class="fas fa-undo"></i> Сбросить по умолчанию
+        </button>
+    </footer>
+</form>

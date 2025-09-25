@@ -1,0 +1,127 @@
+<form autocomplete="off" class="mwangi-hexploration-dialog">
+    <div class="dialog-content">
+        <header class="dialog-header">
+            <h1 class="section-title" style="margin-bottom: 0; border: none;">{{title}}</h1>
+        </header>
+
+        {{#if isGM}}
+        <div class="gm-section">
+            <div class="gm-header">
+                <h3 class="section-title">Настройки Мастера</h3>
+                
+            </div>
+
+            <div class="gm-top-controls">
+                <div class="gm-dc-column">
+                    <label><span>КС Недуга</span> <input type="number" class="gm-dc-input" data-dc-type="affliction" value="{{gmDCs.affliction}}"></label>
+                    <label><span>КС Столкновения</span> <input type="number" class="gm-dc-input" data-dc-type="encounter" value="{{gmDCs.encounter}}"></label>
+                    <label><span>КС Местности</span> <input type="number" class="gm-dc-input" data-dc-type="terrain" value="{{gmDCs.terrain}}"></label>
+                </div>
+                <div class="gm-slots-area">
+                    <div class="gm-slots-row">
+                        <div class="item-slot-wrapper">
+                            <span class="slot-label">Недуг</span>
+                            <div id="hexploration-gm-affliction-slot" class="item-drop-slot {{#if afflictionLoaded}}loaded{{/if}}" title="{{#if afflictionLoaded}}Загружено: {{loadedAfflictionName}}{{else}}Перетащите предмет сюда{{/if}}" style="{{#if afflictionLoaded}}background-image: url('{{loadedAfflictionImage}}');{{/if}}"><i class="fas fa-virus"></i></div>
+                            <div class="slot-name-display">{{#if afflictionLoaded}}{{loadedAfflictionName}}{{else}}(пусто){{/if}}</div>
+                        </div>
+                        <div class="item-slot-wrapper">
+                            <span class="slot-label">Таблица Расх.</span>
+                            <div id="hexploration-gm-consumable-table-slot" class="item-drop-slot {{#if consumableLootTableId}}loaded{{/if}}" title="{{#if consumableLootTableId}}Загружено: {{consumableLootTableName}}{{else}}Перетащите таблицу сюда{{/if}}"><i class="fas fa-table"></i></div>
+                            <div class="slot-name-display">{{#if consumableLootTableId}}{{consumableLootTableName}}{{else}}(пусто){{/if}}</div>
+                        </div>
+                        <div class="item-slot-wrapper">
+                            <span class="slot-label">Таблица Пост.</span>
+                            <div id="hexploration-gm-permanent-table-slot" class="item-drop-slot {{#if permanentLootTableId}}loaded{{/if}}" title="{{#if permanentLootTableId}}Загружено: {{permanentLootTableName}}{{else}}Перетащите таблицу сюда{{/if}}"><i class="fas fa-gem"></i></div>
+                            <div class="slot-name-display">{{#if permanentLootTableId}}{{permanentLootTableName}}{{else}}(пусто){{/if}}</div>
+                        </div>
+                        <div class="item-slot-wrapper">
+                            <span class="slot-label">Табл. Столкн.</span>
+                            <div id="hexploration-gm-encounter-table-slot" class="item-drop-slot {{#if encounterTableId}}loaded{{/if}}" title="{{#if encounterTableId}}Загружено: {{encounterTableName}}{{else}}Перетащите таблицу сюда{{/if}}"><i class="fas fa-paw"></i></div>
+                            <div class="slot-name-display">{{#if encounterTableId}}{{encounterTableName}}{{else}}(пусто){{/if}}</div>
+                        </div>
+                        <div class="item-slot-wrapper">
+                            <span class="slot-label">Табл. Лагеря</span>
+                            <div id="hexploration-gm-camp-encounter-table-slot" class="item-drop-slot {{#if campEncounterTableId}}loaded{{/if}}" title="{{#if campEncounterTableId}}Загружено: {{campEncounterTableName}}{{else}}Перетащите таблицу сюда{{/if}}"><i class="fas fa-campground"></i></div>
+                            <div class="slot-name-display">{{#if campEncounterTableId}}{{campEncounterTableName}}{{else}}(пусто){{/if}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="affliction-details-row">
+                <div class="affliction-save-selector">
+                    <strong>Спасбросок:</strong>
+                    <label><input type="radio" name="afflictionSaveType" value="fortitude" {{#if (eq afflictionSaveType 'fortitude')}}checked{{/if}}> Стойкость</label>
+                    <label><input type="radio" name="afflictionSaveType" value="reflex" {{#if (eq afflictionSaveType 'reflex')}}checked{{/if}}> Рефлекс</label>
+                    <label><input type="radio" name="afflictionSaveType" value="will" {{#if (eq afflictionSaveType 'will')}}checked{{/if}}> Воля</label>
+                </div>
+                <div class="affliction-traits-display">
+                    <strong>Признаки:</strong> {{#if afflictionTraits.length}}{{#each afflictionTraits}}<span class="trait-tag">{{this}}</span>{{/each}}{{else}}<span>(нет)</span>{{/if}}
+                </div>
+            </div>        <button type="button" id="reset-state-button" title="Сбросить состояние исследования"><i class="fas fa-sync-alt"></i> Сбросить</button>
+
+        </div>
+        {{/if}}
+
+        <div class="players-section">
+            <h3 class="section-title">Действия Персонажей Группы</h3>
+            {{#each templatePlayerData as |player id|}}
+            <div class="player-row-container">
+                <div class="player-main-info">
+                    <img src="{{player.characterImage}}" alt="{{player.characterName}}" class="character-portrait">
+                    <div class="player-details">
+                        <span class="character-name">{{player.characterName}}</span>
+                        <div class="activity-skill-wrapper">
+                            <select class="player-activity-select" data-actor-id="{{player.actorId}}" {{#unless player.isControllable}}disabled{{/unless}}>
+                                {{#each @root.activityLabels as |label key|}}
+                                <option value="{{key}}" {{#if (eq player.activity key)}}selected{{/if}}>{{label}}</option>
+                                {{/each}}
+                            </select>
+                            
+                            {{#if player.skillOptions.length}}
+                            <select class="player-skill-select" data-actor-id="{{player.actorId}}" {{#unless player.isControllable}}disabled{{/unless}}>
+                                {{#each player.skillOptions as |skill|}}
+                                <option value="{{skill.key}}" {{#if (eq player.selectedSkill skill.key)}}selected{{/if}}>{{skill.label}}</option>
+                                {{/each}}
+                            </select>
+                            {{/if}}
+
+                            <span class="skill-display">
+                                {{#if player.skillLabel}}{{player.skillLabel}}{{else}}Нет{{/if}}
+                                {{#if player.skillBonus}}
+                                    <span class="skill-bonus-display">({{#if (gt player.skillBonus 0)}}+{{/if}}{{player.skillBonus}})</span>
+                                {{/if}}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="confirm-button-wrapper">
+                        <button type="button" class="player-confirm-button" data-actor-id="{{player.actorId}}" {{#unless player.isControllable}}disabled{{/unless}}>
+                            {{#if player.confirmed}}
+                                <i class="fas fa-check-circle"></i> Изменить
+                            {{else}}
+                                <i class="fas fa-times-circle"></i> Подтвердить
+                            {{/if}}
+                        </button>
+                    </div>
+                </div>
+                {{#if player.hasUntrainedLore}}
+                <div class="untrained-lore-warning">
+                    <i class="fas fa-exclamation-triangle"></i> Внимание: У персонажа нет выбранного навыка Знания. Бросок будет невозможен.
+                </div>
+                {{/if}}
+                {{#if player.activityHelpText}}
+                <div class="activity-help"><strong>{{player.activity}}:</strong> {{{player.activityHelpText}}}</div>
+                {{/if}}
+            </div>
+            {{/each}}
+            {{#unless templatePlayerData}}<p>В группе нет персонажей игроков или группа не создана.</p>{{/unless}}
+        </div>
+
+        <footer class="dialog-buttons">
+            {{#if isGM}}
+            <button type="button" id="travel-commit-button" {{#unless allPlayersConfirmed}}disabled title="Не все игроки подтвердили свои действия"{{/unless}}><i class="fas fa-dice-d20"></i> Совершить</button>
+            {{else}}
+            <p style="text-align: center;">Ожидание Мастера для начала путешествия после подтверждения всеми.</p>
+            {{/if}}
+        </footer>
+    </div>
+</form>

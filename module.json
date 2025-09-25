@@ -2,7 +2,7 @@
   "id": "pf2e-ts-adv-aoa",
   "title": "PF2E-TS-ADV (Эпоха Пепла)",
   "description": "Дополнение для АП Эпоха Пепла",
-  "version": "1.5.0",
+  "version": "1.5.25",
   "relationships": {
     "systems": [
       {
@@ -20,15 +20,23 @@
     "maximum": "13"
   },
   "scripts": [
-    "15.js"
+    "15.js",
+    "25.js"
   ],
-    "languages": [
-        {
-            "lang": "ru",
-            "name": "Русский",
-            "path": "lang/ru.json"
-        }
-    ],
+  "socket": true, 
+  "languages": [
+    {
+      "lang": "ru",
+      "name": "Русский",
+      "path": "lang/ru.json"
+    }
+  ],
+  "styles": [
+    "./style.css"
+  ],
+  "templates": [
+  "modules/pf2e-ts-adv-aoa/templates/activity-editor.html"
+  ],
   "authors": [
     {
       "name": "TaleSale",
