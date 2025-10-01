@@ -1,4 +1,4 @@
-// --- ФИНАЛЬНЫЙ РАБОЧИЙ КОД (v7.2 - Исправлен порядок настроек) ---
+// --- ФИНАЛЬНЫЙ РАБОЧИЙ КОД (v7.4 - Исправлено двойное закрытие окна) ---
 
 const MODULE_ID = "pf2e-ts-adv-aoa";
 const JOURNAL_NAME = "Исследование Муанги";
@@ -404,12 +404,54 @@ class MwangiHexplorationResultsApp extends Application {
     async getData() { const context = await super.getData(); context.resultsHtml = this.data.html; return context; }
     activateListeners(html) { super.activateListeners(html); html.find('#copy-results-button').click(() => { const resultsContent = html.find('#results-content')[0]; if (resultsContent) { game.clipboard.copyHTML(resultsContent); ui.notifications.info("Результаты скопированы в буфер обмена!"); } }); html.find('button[data-action="close"]').click(() => this.close()); }
 }
+
 class MwangiAfflictionSavesApp extends Application {
     constructor(data, options = {}) { super(options); this.data = data; }
     static get defaultOptions() { return foundry.utils.mergeObject(super.defaultOptions, { id: "mwangi-affliction-saves-app", title: "Этап 2: Спасброски от Недуга", template: null, width: 700, height: "auto", resizable: true, classes: ["pf2e", "dialog"] }); }
     async _renderInner(data) { if (!this.compiledTemplate) { this.compiledTemplate = Handlebars.compile(afflictionSavesAppTemplateString); } return $(this.compiledTemplate(data)); }
     async getData() { const context = await super.getData(); context.interimReportHtml = this.data.saveData.interimReportHtml; return context; }
-    activateListeners(html) { super.activateListeners(html); html.find('#start-saves-button').click(async (event) => { $(event.currentTarget).prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Выполнение...'); await window.MwangiHexplorationAppInstance.executeAfflictionSaves(this.data.saveData); this.close(); }); }
+    activateListeners(html) {
+        super.activateListeners(html);
+        html.find('#start-saves-button').click(async (event) => {
+            $(event.currentTarget).prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Выполнение...');
+            await window.MwangiHexplorationAppInstance.executeAfflictionSaves(this.data.saveData);
+            this.close({ force: true }); // ИЗМЕНЕНО: Принудительное закрытие без диалога
+        });
+    }
+
+    async close(options = {}) {
+        // ИЗМЕНЕНО: Проверяем флаг принудительного закрытия
+        if (options?.force) {
+            return super.close(options);
+        }
+
+        if (!game.user.isGM) {
+            return super.close(options);
+        }
+
+        return new Promise((resolve) => {
+            Dialog.confirm({
+                title: "Подтверждение закрытия",
+                content: "<p>Это окно для спасбросков от недугов. Вы уверены что хотите его закрыть?</p>",
+                yes: async () => {
+                    let finalReportHtml = this.data.saveData.interimReportHtml;
+                    finalReportHtml += `<h3>Фаза 5: Спасброски от Недуга</h3><p>Спасброски от недуга были пропущены Мастером.</p>`;
+                    
+                    if (window.MwangiHexplorationAppInstance) {
+                        await window.MwangiHexplorationAppInstance._saveReportToJournalAndShow(finalReportHtml);
+                    } else {
+                        ui.notifications.error("Не удалось найти основной экземпляр приложения для сохранения отчета.");
+                    }
+                    
+                    resolve(super.close(options));
+                },
+                no: () => {
+                    resolve(this); // Не закрываем окно
+                },
+                defaultYes: false
+            });
+        });
+    }
 }
 
 // --- ХУКИ И ИНИЦИАЛИЗАЦИЯ ---
@@ -425,7 +467,6 @@ Hooks.once('init', () => {
     game.settings.register(MODULE_ID, SETTING_KEY, { name: "Hexploration State Mwangi", scope: "world", config: false, type: Object, default: getDefaultState(), onChange: () => { if (window.MwangiHexplorationAppInstance?.rendered) { window.MwangiHexplorationAppInstance.render(false); } } });
     game.settings.register(MODULE_ID, SKILL_SETTING_KEY, { name: "Custom Activity Skills", scope: "world", config: false, type: Object, default: {} });
     
-    // ПОРЯДОК ИЗМЕНЕН
     game.settings.register(MODULE_ID, 'enableMwangiHexploration', { 
         name: "MHE.Settings.Enable.Name", 
         hint: "MHE.Settings.Enable.Hint", 
